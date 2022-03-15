@@ -41,7 +41,7 @@ app.get('/student/:id', (req, res) => {
       if (id == 5) {
         name = "Hello Mr."+obj.firstName + " " + obj.lastName + ", You need to improve on your skills Set"
       } else {
-        name = "Hello Mr."+obj.firstName + " " + obj.lastName + ", You are now becoming a great DevOps Engineer"
+        name = "Hello Mr."+obj.firstName + " " + obj.lastName + ", You will become a great DevOps Engineer"
         
       }
       
