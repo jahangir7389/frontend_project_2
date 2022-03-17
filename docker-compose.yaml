@@ -1,0 +1,58 @@
+version: '3.7'
+services:
+  backend:
+    build:
+      context: backend_project_2
+#      dockerfile: Dockerfile
+#    init: true
+    image: backend_project_2:sha-dd7d030
+    networks:
+      - network1
+      - network2
+    ports:
+      - "9092:8080"
+  db:
+    image: mysql:5.7
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: password123
+    volumes:
+      - db-data:/var/lib/mysql
+    networks:
+      - network1
+    ports:
+      - "3307:3306"
+    #expose: 
+     # - "3307"
+    depends_on:
+      -  backend
+    command: ["mysqld",
+        "--server_id=1",
+        "--binlog_checksum=NONE",
+        "--gtid_mode=ON",
+        "--enforce_gtid_consistency=ON",
+        "--log_bin",
+        "--log_slave_updates=ON",
+        "--master_info_repository=TABLE",
+        "--relay_log_info_repository=TABLE",
+        "--transaction_write_set_extraction=XXHASH64",
+        "--user=mysql",
+        "--skip-host-cache",
+        "--skip-name-resolve"]
+  frontend:
+    build:
+      context: frontend_project_2
+#      dockerfile: Dockerfile
+#    init: true
+    image: frontend_project_2:sha-e5b68e4
+    networks:
+      - network2
+    ports:
+      - "9091:8080"
+    depends_on:
+      - backend
+networks:
+   network1:
+   network2:
+volumes:
+  db-data:  
